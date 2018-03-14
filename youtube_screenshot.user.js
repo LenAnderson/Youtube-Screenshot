@@ -2,7 +2,7 @@
 // @name         YouTube - Screenshot
 // @namespace    https://github.com/LenAnderson/
 // @downloadURL  https://github.com/LenAnderson/YouTube-Screenshot/raw/master/youtube_screenshot.user.js
-// @version      1.0
+// @version      1.1
 // @match        https://www.youtube.com/*
 // @grant        none
 // ==/UserScript==
@@ -27,7 +27,11 @@
             let url = URL.createObjectURL(blob);
             let link = document.createElement('a');
             link.href = url;
-            link.download = document.title + ' (' + time + ').png';
+            if (document.title.length > 23) {
+                link.download = document.title.substring(0, 20) + '...' + ' (' + time + ').png';
+            } else {
+                link.download = document.title + ' (' + time + ').png';
+            }
             link.click();
         });
     };
