@@ -2,7 +2,7 @@
 // @name         YouTube - Screenshot
 // @namespace    https://github.com/LenAnderson/
 // @downloadURL  https://github.com/LenAnderson/YouTube-Screenshot/raw/master/youtube_screenshot.user.js
-// @version      1.1
+// @version      1.2
 // @match        https://www.youtube.com/*
 // @grant        none
 // ==/UserScript==
@@ -17,20 +17,22 @@
         canvas.width = video.videoWidth;
         let con = canvas.getContext('2d');
         let time = (t => {
+			console.log('YT-Screen', t);
             let s = (Math.floor(t) % 60).toString().padStart(2,0);
             let m = (Math.floor(t/60) % 60).toString().padStart(2,0);
             let h = (Math.floor(t / 3600)).toString().padStart(2,0);
             return h + '.' + m + '.' + s;
-        })(video.getCurrentTime());
+        })(video.currentTime);
         con.drawImage(video, 0, 0, canvas.width, canvas.height);
         canvas.toBlob(blob => {
             let url = URL.createObjectURL(blob);
             let link = document.createElement('a');
             link.href = url;
-            if (document.title.length > 23) {
-                link.download = document.title.substring(0, 20) + '...' + ' (' + time + ').png';
+			let title = document.title.replace(/ - YouTube$/, '');
+            if (title.length > 53) {
+                link.download = `${title.substring(0, 50)}... (${time}).png`;
             } else {
-                link.download = document.title + ' (' + time + ').png';
+                link.download = `${title} (${time}).png`;
             }
             link.click();
         });
